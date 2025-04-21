@@ -32,14 +32,14 @@
       body {
         padding: 5rem 5rem 10rem;
         line-height: 1.7;
-        font-family: 'Nunito Sans', sans-serif;
+        font-family: "Nunito Sans", sans-serif;
         color: #555;
         min-height: 100vh;
         background: linear-gradient(to bottom right, #9be15d, #00e3ae);
       }
 
       h1 {
-        font-family: 'Megrim', sans-serif;
+        font-family: "Megrim", sans-serif;
         font-size: 6rem;
         color: white;
         transform: skewY(-5deg);
@@ -49,7 +49,7 @@
       }
 
       h1::before {
-        content: '';
+        content: "";
         display: block;
         height: 65%;
         width: 49%;
@@ -83,7 +83,7 @@
       }
 
       .product__hero::before {
-        content: '';
+        content: "";
         display: block;
         height: 100%;
         width: 100%;
@@ -162,6 +162,9 @@
         align-items: center;
         justify-content: center;
       }
+      .organicFalse{
+        display:none;
+      }
 
       .product__organic h5 {
         font-weight: 900;
@@ -198,7 +201,7 @@
       .product__name {
         background: linear-gradient(to bottom, #9be15d, #00e3ae);
         padding: 1rem;
-        font-family: 'Megrim', sans-serif;
+        font-family: "Megrim", sans-serif;
         font-size: 4rem;
         color: white;
         text-align: center;
@@ -270,7 +273,9 @@
       <h1>🌽 Node Farm 🥦</h1>
 
       <figure class="product">
-        <div class="product__organic"><h5>Organic</h5></div>
+        <div class="product__organic __organicValue__">
+          <h5>__isOrganic__</h5>
+        </div>
         <a href="/" class="product__back">
           <span class="emoji-left">👈</span>Back
         </a>
@@ -284,17 +289,14 @@
           <p><span class="emoji-left">📦</span>__quantity__</p>
           <p><span class="emoji-left">🏷</span> __price__€</p>
         </div>
-  
+
         <a href="#" class="product__link">
           <span class="emoji-left">🛒</span>
           <span>Add to shopping card (__price__€)</span>
         </a>
-  
-        <p class="product__description">
-          __description__
-        </p>
+
+        <p class="product__description">__description__</p>
       </figure>
-      
     </div>
   </body>
 </html>

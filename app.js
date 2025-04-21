@@ -62,6 +62,10 @@ const replaceFunction = (IndividualTemplate, item) => {
   output = output.replace(/__description__/g, item.description);
   output = output.replace(/__detail__/g, item.id);
 
+//   if organic:true, organic text is written in h tag else classname organicFalse is added whose display:none;
+  if (item.organic) output = output.replace(/__isOrganic__/g, "organic");
+  else output = output.replace(/__organicValue__/g, "organicFalse");
+
 //   returns array of string of templates
   return output;
 };
