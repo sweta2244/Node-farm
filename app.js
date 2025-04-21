@@ -2,7 +2,7 @@
 const fs = require("fs");
 
 // module for netwroking,creating server,fetching from api too
-const http = require("http");
+const https = require("https");
 
 // module to parse(separate in form of objects) url
 const url = require("url");
@@ -24,10 +24,14 @@ const ProductTemplate = fs.readFileSync(
 // variables for apidata(js object) and data(json string format)
 let apiObj = "";
 let data = "";
-
+const options = {
+    key: fs.readFileSync("path/to/privatekey.pem"),
+    cert: fs.readFileSync("path/to/certificate.pem")
+  };
+  
 //fetch api data, method get
-http
-  .get("http://localhost:8080/api", (res) => {
+https
+  .get("/api", (res) => {
 
     // response comes in parts(chunks) , response data
     res.on("data", (chunk) => (data += chunk));
@@ -71,8 +75,8 @@ const replaceFunction = (IndividualTemplate, item) => {
 };
 
 //  server is created using http module
-http
-  .createServer((req, res) => {
+https
+  .createServer(options,(req, res) => {
     // parsed url(converted single string url into objects)
     const parsedUrl = url.parse(req.url, true);
 
