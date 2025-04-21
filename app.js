@@ -2,7 +2,7 @@
 const fs = require("fs");
 
 // module for netwroking,creating server,fetching from api too
-const https = require("https");
+const http = require("http");
 
 // module to parse(separate in form of objects) url
 const url = require("url");
@@ -24,15 +24,10 @@ const ProductTemplate = fs.readFileSync(
 // variables for apidata(js object) and data(json string format)
 let apiObj = "";
 let data = "";
-const options = {
-    key: fs.readFileSync("path/to/privatekey.pem"),
-    cert: fs.readFileSync("path/to/certificate.pem")
-  };
-  
-//fetch api data, method get
-https
-  .get("/api", (res) => {
 
+//fetch api data, method get
+http
+  .get("http://localhost:8080/api", (res) => {
     // response comes in parts(chunks) , response data
     res.on("data", (chunk) => (data += chunk));
 
@@ -55,8 +50,7 @@ function parsing(data) {
 
 // replacing placeholder with api data. template and each object is passed as argument
 const replaceFunction = (IndividualTemplate, item) => {
-
-// /placeholder/g makes changes globally in that template, not one but all occurance are changed 
+  // /placeholder/g makes changes globally in that template, not one but all occurance are changed
   let output = IndividualTemplate.replace(/__image__/g, item.image);
   output = output.replace(/__productName__/g, item.productName);
   output = output.replace(/__quantity__/g, item.quantity);
@@ -66,17 +60,17 @@ const replaceFunction = (IndividualTemplate, item) => {
   output = output.replace(/__description__/g, item.description);
   output = output.replace(/__detail__/g, item.id);
 
-//   if organic:true, organic text is written in h tag else classname organicFalse is added whose display:none;
+  //   if organic:true, organic text is written in h tag else classname organicFalse is added whose display:none;
   if (item.organic) output = output.replace(/__isOrganic__/g, "organic");
   else output = output.replace(/__organicValue__/g, "organicFalse");
 
-//   returns array of string of templates
+  //   returns array of string of templates
   return output;
 };
 
 //  server is created using http module
-https
-  .createServer(options,(req, res) => {
+http
+  .createServer((req, res) => {
     // parsed url(converted single string url into objects)
     const parsedUrl = url.parse(req.url, true);
 
@@ -85,50 +79,48 @@ https
 
     // conditional routing for individual products
     if (pathname === "/" && query.id < apiObj.length) {
-
-        // getting array of product whose id matches with that of query
+      // getting array of product whose id matches with that of query
       let individualProduct = apiObj.filter(
         (item) => item.id === Number(query.id)
       );
 
-    //   replacing placeholder in template with the specific product data
+      //   replacing placeholder in template with the specific product data
       const templateIndividual = replaceFunction(
         ProductTemplate,
         individualProduct[0]
       );
 
-    //   telling browser about our response type so that it can work accordingly
+      //   telling browser about our response type so that it can work accordingly
       res.writeHead(200, { "Content-type": "text/html" });
 
-    //   ending the response
+      //   ending the response
       res.end(templateIndividual);
 
-    //   homepage
+      //   homepage
     } else if (pathname === "/" || pathname === "/overview" || query === null) {
-
-        // join is necessary as map return array of string of templates. sending each product each mapping to replace function.
+      // join is necessary as map return array of string of templates. sending each product each mapping to replace function.
       const template = apiObj
         .map((item) => replaceFunction(IndividualTemplate, item))
         .join("");
 
-        // above multiple products are now replaced in the main/container template.
+      // above multiple products are now replaced in the main/container template.
       const final = OverviewTemplate.replace(/__overview__/g, template);
       res.writeHead(200, { "Content-type": "text/html" });
       res.end(final);
 
-    //   local api
+      //   local api
     } else if (pathname === "/api") {
       res.writeHead(200, { "Content-type": "application/json" });
       res.end(api);
 
-    //   any other url except what we have defined/require
+      //   any other url except what we have defined/require
     } else {
       res.writeHead(404);
       res.end("Page not found");
     }
   })
 
-//   server listens request and send response through this port
+  //   server listens request and send response through this port
   .listen(8080, (err) => {
     console.log("listening to http://localhost:8080");
   });
