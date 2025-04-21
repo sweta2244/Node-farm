@@ -4,6 +4,9 @@ const fs = require("fs");
 // module for netwroking,creating server,fetching from api too
 const http = require("http");
 
+// for fetching
+const https=require("https");
+
 // module to parse(separate in form of objects) url
 const url = require("url");
 
@@ -26,8 +29,8 @@ let apiObj = "";
 let data = "";
 
 //fetch api data, method get
-http
-  .get("http://localhost:8080/api", (res) => {
+https
+  .get("https://raw.githubusercontent.com/sweta2244/node-farm-api/refs/heads/main/data.json", (res) => {
     // response comes in parts(chunks) , response data
     res.on("data", (chunk) => (data += chunk));
 
